@@ -11,11 +11,10 @@ exports.handler = async function execute(event, context, callback) {
     const name = event.NAME;
     const attribute = event.ATTRIBUTE;
 
-
     const data = await S3.getObject({
         Bucket: bucket,
         Key: key,
-    }).promise();
+    }).promise().catch(error => console.error(error));
 
     let json = JSON.parse(data.Body.toString('utf-8'));
     json = json['resources']
@@ -33,4 +32,6 @@ exports.handler = async function execute(event, context, callback) {
             }
         }
     }
+    console.error("Attribute not found.")
+    return null;
 }
